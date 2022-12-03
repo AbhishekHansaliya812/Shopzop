@@ -1,0 +1,60 @@
+﻿@model Shopzop.Models.RegisrationModel
+
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval");
+}
+
+<head>
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+</head>
+
+@using (Html.BeginForm("Register", "Registration", FormMethod.Post))
+{
+    <fieldset>
+        <legend>Registration</legend>
+        @Html.ValidationSummary(true)
+        <div>
+            <table>
+                <tr>
+                    <td>@Html.LabelFor(model => model.UserName)</td>
+                    <td>@Html.TextBoxFor(model => model.UserName, new { @class = "", placeholder = "Enter User Name", style = "margin-bottom:5px; margin-left:5px; margin-right:5px;" })</td>
+                    <td>@Html.ValidationMessageFor(model => model.UserName)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(model => model.Email)</td>
+                    <td>@Html.TextBoxFor(model => model.Email, new { @class = "", placeholder = "Enter Email", style = "margin-bottom:5px; margin-left:5px;" })</td>
+                    <td>@Html.ValidationMessageFor(model => model.Email)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(model => model.Mobile)</td>
+                    <td>@Html.TextBoxFor(model => model.Mobile, new { @class = "", placeholder = "Enter Mobile Number", style = "margin-bottom:5px; margin-left:5px;" })</td>
+                    <td>@Html.ValidationMessageFor(model => model.Mobile)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(model => model.Password)</td>
+                    <td>@Html.PasswordFor(model => model.Password, new { @class = "", placeholder = "Enter Password", style = "margin-bottom:5px; margin-left:5px;" })</td>
+                    <td>@Html.ValidationMessageFor(model => model.Password)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(model => model.ConfirmPassword)</td>
+                    <td>@Html.PasswordFor(model => model.ConfirmPassword, new { @class = "", placeholder = "Enter Password Again", style = "margin-bottom:5px; margin-left:5px;" })</td>
+                    <td>@Html.ValidationMessageFor(model => model.ConfirmPassword)</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <input type="submit" value="Register" style="margin-left:5px;" />
+                    </td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+    </fieldset>
+}

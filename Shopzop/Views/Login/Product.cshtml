@@ -1,0 +1,59 @@
+﻿@model IEnumerable<Shopzop.Product>
+@{
+    ViewBag.Title = "Product";
+}
+
+<head>
+    <script type="text/javascript">
+        function preventBack() { window.history.forward(); }
+        setTimeout("preventBack()", 0);
+        window.onunload = function () { null };
+    </script>
+</head>
+
+<div style="display:flex; justify-content:space-between">
+    <div>
+        <h2>Hi @Session["UserName"]</h2>
+        <h2>Products</h2>
+    </div>
+    <div style="margin-top:50px;">
+        @using (Html.BeginForm("Product", "Login", FormMethod.Post))
+        {
+            @Html.TextBox("SearchName") <input type="submit" value=" Search" required />
+        }
+
+    </div>
+    <div style="margin-top:50px;">
+        @Html.ActionLink("Add Product", "Add", new { }, new { @class = "btn btn-success" })
+    </div>
+    <div style="margin-top:50px;">
+        @Html.ActionLink("Logout", "Logout", new { }, new { @class = "btn btn-danger" })
+    </div>
+</div>
+
+<table class="table table-bordered" style="">
+    <thead>
+        <tr>
+            <th style="text-align:center;">Id</th>
+            <th style="text-align:center;">Name</th>
+            <th style="text-align:center;">Description</th>
+            <th style="text-align:center;">Price</th>
+            <th style="text-align:center;">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="text-align:center;">@item.ProductId</td>
+                <td style="text-align:center;">@item.ProductName</td>
+                <td style="text-align:center;">@item.ProductDescription</td>
+                <td style="text-align:center;">@item.ProductPrice</td>
+                <td style="text-align:center;">
+                    @Html.ActionLink("Edit", "Edit", new { id = item.ProductId }, new { @class = "btn btn-warning" })
+                    @Html.ActionLink("Delete", "Delete", new { id = item.ProductId }, new { @class = "btn btn-danger", onclick = "return confirm('Are you sure you want to delete this Product?')" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

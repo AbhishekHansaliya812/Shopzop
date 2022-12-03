@@ -1,0 +1,55 @@
+﻿@model Shopzop.Models.LoginModel
+@{
+    ViewBag.Title = "Index";
+}
+
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval");
+}
+
+<head>
+    <script type="text/javascript">
+        function preventBack() { window.history.forward(); }
+        setTimeout("preventBack()", 0);
+        window.onunload = function () { null };
+    </script>
+</head>
+
+@using (Html.BeginForm())
+{
+    <fieldset>
+        <legend>Login</legend>
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+
+        @if (@ViewBag.Message != null)
+        {
+            <div style="border: 1px solid red; margin-bottom:10px;">
+                @ViewBag.Message
+            </div>
+        }
+        <div>
+            <table>
+                <tr>
+                    <td>@Html.LabelFor(model => model.UserName)</td>
+                    <td>@Html.TextBoxFor(model => model.UserName, new { @class = "", placeholder = "Enter User Name", style = "margin-bottom:5px; margin-left:5px; margin-right:5px" })</td>
+                    <td>@Html.ValidationMessageFor(model => model.UserName)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(model => model.Password)</td>
+                    <td>@Html.PasswordFor(model => model.Password, new { @class = "", placeholder = "Enter Password", style = "margin-bottom:5px; margin-left:5px;" })</td>
+                    <td>@Html.ValidationMessageFor(model => model.Password)</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <input type="submit" value="Login" style="margin-left:5px;" />
+                        @Html.ActionLink("Register", "Registration", "Registration", null, new { @style = "float:right; margin-top:5px;" })
+                    </td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+    </fieldset>
+}
+
