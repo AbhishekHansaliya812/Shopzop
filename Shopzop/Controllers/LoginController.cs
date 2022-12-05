@@ -29,8 +29,8 @@ namespace Shopzop.Controllers
         {
             if (ModelState.IsValid)
             {
-                //Password decryptPassword = new Password();
-                PasswordBase64 decryptPassword = new PasswordBase64();
+                Password decryptPassword = new Password();
+                //PasswordBase64 decryptPassword = new PasswordBase64();
                 using (ShopzopEntities db = new ShopzopEntities())
                 {
                     var obj = db.Users.ToList().Where(model => model.UserName.Equals(user.UserName) && decryptPassword.DecryptPassword(model.Password).Equals(user.Password)).FirstOrDefault();

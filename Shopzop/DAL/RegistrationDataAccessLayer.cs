@@ -13,8 +13,8 @@ namespace Shopzop.DAL
     {
         public string SignUpUser(RegisrationModel model)
         {
-            //Password encryptPassword = new Password();
-            PasswordBase64 encryptPassword = new PasswordBase64();
+            Password encryptPassword = new Password();
+            //PasswordBase64 encryptPassword = new PasswordBase64();
             SqlConnection connection = new SqlConnection("Data Source=(LocalDb)\\MSSQLLocalDB;Initial Catalog=Shopzop;Integrated Security=True");
             try
             {
