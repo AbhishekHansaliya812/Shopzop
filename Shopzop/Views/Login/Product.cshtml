@@ -1,4 +1,10 @@
-﻿@model IEnumerable<Shopzop.Product>
+﻿@*@using PagedList;
+@using PagedList.Mvc;*@
+
+@model IEnumerable<Shopzop.Product>
+
+@*@model IPagedList<Shopzop.Product>*@
+
 @{
     ViewBag.Title = "Product";
 }
@@ -11,9 +17,10 @@
     </script>
 </head>
 
-<div style="display:flex; justify-content:space-between">
-    <div>
-        <h2>Hi @Session["UserName"]</h2>
+@*<link href="~/Content/PagedList.css" rel="stylesheet" />*@
+
+<div style="display:flex; justify-content:space-between;">
+    <div style="margin-top:20px;">
         <h2>Products</h2>
     </div>
     <div style="margin-top:50px;">
@@ -26,12 +33,9 @@
     <div style="margin-top:50px;">
         @Html.ActionLink("Add Product", "Add", new { }, new { @class = "btn btn-success" })
     </div>
-    <div style="margin-top:50px;">
-        @Html.ActionLink("Logout", "Logout", new { }, new { @class = "btn btn-danger" })
-    </div>
 </div>
 
-<table class="table table-bordered" style="">
+<table class="table table-bordered" style="margin-top:20px;">
     <thead>
         <tr>
             <th style="text-align:center;">Id</th>
@@ -48,12 +52,28 @@
                 <td style="text-align:center;">@item.ProductId</td>
                 <td style="text-align:center;">@item.ProductName</td>
                 <td style="text-align:center;">@item.ProductDescription</td>
-                <td style="text-align:center;">@item.ProductPrice</td>
-                <td style="text-align:center;">
-                    @Html.ActionLink("Edit", "Edit", new { id = item.ProductId }, new { @class = "btn btn-warning" })
-                    @Html.ActionLink("Delete", "Delete", new { id = item.ProductId }, new { @class = "btn btn-danger", onclick = "return confirm('Are you sure you want to delete this Product?')" })
+                <td style="text-align:center;">₹@item.ProductPrice</td>
+                <td style="text-align:center; width:190px;">
+                    <div style="display:flex;">
+                        <div style="flex:0 40%;">
+                            @Html.ActionLink("Edit", "Edit", new { id = item.ProductId }, new { @class = "btn btn-warning" })
+                        </div>
+                        <div style="flex:1;">
+                            @if (item.Status == true)
+                            {
+                                @Html.ActionLink("Inactivate", "Inactivate", new { id = item.ProductId }, new { @class = "btn btn-danger", onclick = "return confirm('Are you sure you want to Inactivate this Product?')" })
+                            }
+                            @if (item.Status == false)
+                            {
+                                @Html.ActionLink("Activate", "Activate", new { id = item.ProductId }, new { @class = "btn btn-success", onclick = "return confirm('Are you sure you want to Activate this Product?')" })
+                            }
+                        </div>
+                    </div>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+@*<div id='Paging'>
+    @Html.PagedListPager(Model, page => Url.Action("Product", new { page, search = Request.QueryString["SearchName"] }), new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded, DisplayPageCountAndCurrentLocation = true, DisplayItemSliceAndTotal = true })
+</div>*@

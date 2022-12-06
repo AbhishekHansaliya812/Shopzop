@@ -66,7 +66,8 @@ namespace Shopzop.Controllers
             if (Session["UserID"] != null)
             {
                 ShopzopEntities db = new ShopzopEntities();
-                return View(db.Products.Where(model => model.Status == true).ToList());
+                //return View(db.Products.Where(model => model.Status == true).ToList());
+                return View(db.Products.ToList());
             }
 
             else if (Session["UserId"] == null)
@@ -141,13 +142,27 @@ namespace Shopzop.Controllers
         }
 
 
-        public ActionResult Delete(int? id)
+        public ActionResult Inactivate(int? id)
         {
             if (Session["UserID"] != null)
             {
                 ShopzopEntities db = new ShopzopEntities();
                 var Product = db.Products.Find(id);
                 Product.Status = false;
+                db.SaveChanges();
+                return RedirectToAction("Product");
+            }
+            return View("Error");
+        }
+
+
+        public ActionResult Activate(int? id)
+        {
+            if (Session["UserID"] != null)
+            {
+                ShopzopEntities db = new ShopzopEntities();
+                var Product = db.Products.Find(id);
+                Product.Status = true;
                 db.SaveChanges();
                 return RedirectToAction("Product");
             }

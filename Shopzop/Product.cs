@@ -32,7 +32,7 @@ namespace Shopzop
         [Display(Name = "Category Id")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Please Enter Category Id")]
         public int CategoryId { get; set; }
-        public bool Status { get; set; } = true;
+        public bool Status { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; } = DateTime.Now;
 
         public virtual Category Category { get; set; }

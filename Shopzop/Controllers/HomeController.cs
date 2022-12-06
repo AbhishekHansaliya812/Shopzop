@@ -10,7 +10,6 @@ namespace Shopzop.Controllers
     {
         public ActionResult Index()
         {
-            Session.Clear();
             return View();
         }
 

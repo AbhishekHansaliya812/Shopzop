@@ -19,9 +19,30 @@
                 @Html.ActionLink("Shopzop", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Login", "Login", "Login")</li>
-                </ul>
+                @if (Session["UserId"] == null)
+                {
+                    <div class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav">
+                            <li>@Html.ActionLink("Login", "Login", "Login")</li>
+                        </ul>
+                    </div>
+                }
+                @if (Session["UserId"] != null)
+                {
+                    <div class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav">
+                            <li>@Html.ActionLink("Products", "Product", "Login")</li>
+                        </ul>
+                        <div style="float:right;">
+                            <ul class="nav navbar-nav" style="color:white; margin-top:15px;">
+                                <li>Welcome @Session["UserName"]</li>
+                            </ul>
+                            <ul class="nav navbar-nav" style="">
+                                <li>@Html.ActionLink("Logout", "Logout", "Login")</li>
+                            </ul>
+                        </div>
+                    </div>
+                }
             </div>
         </div>
     </div>
