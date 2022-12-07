@@ -1,9 +1,9 @@
-﻿@*@using PagedList;
-@using PagedList.Mvc;*@
+﻿@using PagedList;
+@using PagedList.Mvc;
 
-@model IEnumerable<Shopzop.Product>
+@*@model IEnumerable<Shopzop.Product>*@
 
-@*@model IPagedList<Shopzop.Product>*@
+@model IPagedList<Shopzop.Product>
 
 @{
     ViewBag.Title = "Product";
@@ -17,7 +17,7 @@
     </script>
 </head>
 
-@*<link href="~/Content/PagedList.css" rel="stylesheet" />*@
+<link href="~/Content/PagedList.css" rel="stylesheet" />
 
 <div style="display:flex; justify-content:space-between;">
     <div style="margin-top:20px;">
@@ -42,6 +42,7 @@
             <th style="text-align:center;">Name</th>
             <th style="text-align:center;">Description</th>
             <th style="text-align:center;">Price</th>
+            <th style="text-align:center;">Category</th>
             <th style="text-align:center;">Action</th>
         </tr>
     </thead>
@@ -53,6 +54,7 @@
                 <td style="text-align:center;">@item.ProductName</td>
                 <td style="text-align:center;">@item.ProductDescription</td>
                 <td style="text-align:center;">₹@item.ProductPrice</td>
+                <td style="text-align:center;">@item.Category.CategoryName</td>
                 <td style="text-align:center; width:190px;">
                     <div style="display:flex;">
                         <div style="flex:0 40%;">
@@ -74,6 +76,6 @@
         }
     </tbody>
 </table>
-@*<div id='Paging'>
+<div id='Paging'>
     @Html.PagedListPager(Model, page => Url.Action("Product", new { page, search = Request.QueryString["SearchName"] }), new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded, DisplayPageCountAndCurrentLocation = true, DisplayItemSliceAndTotal = true })
-</div>*@
+</div>

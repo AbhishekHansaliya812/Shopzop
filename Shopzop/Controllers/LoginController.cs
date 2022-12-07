@@ -8,7 +8,9 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using System.Web.UI;
 using Microsoft.Ajax.Utilities;
+using PagedList;
 using Shopzop.Common;
 using Shopzop.Models;
 
@@ -61,13 +63,13 @@ namespace Shopzop.Controllers
             return View();
         }
 
-        public ActionResult Product()
+        public ActionResult Product(int? page)
         {
             if (Session["UserID"] != null)
             {
                 ShopzopEntities db = new ShopzopEntities();
                 //return View(db.Products.Where(model => model.Status == true).ToList());
-                return View(db.Products.ToList());
+                return View(db.Products.ToList().ToPagedList(page ?? 1,5));
             }
 
             else if (Session["UserId"] == null)
@@ -170,14 +172,15 @@ namespace Shopzop.Controllers
         }
 
         [HttpPost]
-        public ActionResult Product(string searchName)
+        public ActionResult Product(string searchName, int? page)
         {
             ShopzopEntities db = new ShopzopEntities();
             if (Session["UserID"] != null)
             {
                 if (searchName == "")
                 {
-                    return View(db.Products.Where(model => model.Status == true).ToList());
+                    //return View(db.Products.Where(model => model.Status == true).ToList());
+                    return View(db.Products.ToList().ToPagedList(page ?? 1, 5));
                 }
                 else if (ModelState.IsValid)
                 {
@@ -185,7 +188,7 @@ namespace Shopzop.Controllers
                     if (!String.IsNullOrEmpty(searchName))
                     {
                         
-                        var search = db.Products.Where(model => model.ProductName.Contains(searchName) && model.Status == true).ToList();
+                        var search = db.Products.Where(model => model.ProductName.Contains(searchName)).ToList().ToPagedList(page ?? 1, 5);
                         return View(search);
 
                     }
