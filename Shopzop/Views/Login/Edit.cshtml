@@ -15,14 +15,13 @@
     </script>
 </head>
 
-<h2>Edit</h2>
+<h2>Edit Product Detail</h2>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(s => s.CreateDate)
 <div class="form-horizontal">
-    <h4>Product Detail</h4>
     <hr />
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     @Html.HiddenFor(model => model.ProductId)
@@ -55,9 +54,14 @@
         </div>
     </div>
     <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Save" class="btn btn-success" style="margin-left:5px;" />
-            @Html.ActionLink("Products", "Product", new { }, new { @class = "btn btn-default", style = "margin-left:140px;" })
+        <div class="col-md-offset-2 col-md-10" style="margin-left:28%;">
+            <div class="col-md-1" style=" margin-right: -1%; ">
+                <input type="submit" value="Save" class="btn btn-success" />
+            </div>
+            <div class="col-md-1">
+                @Html.ActionLink("Back", "Product", new { }, new { @class = "btn btn-default" })
+            </div>
+
         </div>
     </div>
 </div>
