@@ -63,25 +63,48 @@ namespace Shopzop.Controllers
             return View();
         }
 
+
+        private SelectListItem[] GetCategoryTypesList()
+        {
+            SelectListItem[] categoryTypes = null;
+
+            ShopzopEntities db = new ShopzopEntities();
+
+            var items = db.Categories.Select(a => new SelectListItem()
+            {
+                Text = a.CategoryName,
+                Value = a.CategoryId.ToString()
+            }).ToList();
+
+            categoryTypes = items.ToArray();
+
+
+            // Have to create new instances via projection
+            // to avoid ModelBinding updates to affect this
+            // globally
+            return categoryTypes
+                .Select(d => new SelectListItem()
+                {
+                    Value = d.Value,
+                    Text = d.Text
+                })
+             .ToArray();
+        }
+
+
+
         public ActionResult Product(int? page)
         {
-            if (Session["UserID"] != null)
-            {
-                ShopzopEntities db = new ShopzopEntities();
-                //return View(db.Products.Where(model => model.Status == true).ToList());
-                return View(db.Products.ToList().ToPagedList(page ?? 1,5));
-            }
-
-            else if (Session["UserId"] == null)
+            if (Session["UserID"] == null)
             {
                 return View("Error");
             }
-
-            else
-            {
-                ViewBag.Message = "User Name or Password is incorrect";
-                return RedirectToAction("Login");
-            }
+            ShopzopEntities db = new ShopzopEntities();
+            //return View(db.Products.Where(model => model.Status == true).ToList());
+            ViewBag.categoryTypes = GetCategoryTypesList();
+            ViewBag.Action = "Product";
+            var product = db.Products.ToList().ToPagedList(page ?? 1, 5);
+            return View(product);
         }
 
 
@@ -89,9 +112,9 @@ namespace Shopzop.Controllers
         {
             if (Session["UserID"] != null)
             {
+                ViewBag.categoryTypes = GetCategoryTypesList();
                 return View();
             }
-
             return View("Error");
         }
 
@@ -124,6 +147,7 @@ namespace Shopzop.Controllers
                 {
                     return HttpNotFound();
                 }
+                ViewBag.categoryTypes = GetCategoryTypesList();
                 return View(product);
             }
             return View("Error");
@@ -171,8 +195,26 @@ namespace Shopzop.Controllers
             return View("Error");
         }
 
-        [HttpPost]
-        public ActionResult Product(string searchName, int? page)
+
+        public ActionResult CategorySearch(int? CategoryName, int? page)
+        {
+            ShopzopEntities db = new ShopzopEntities();
+            if (Session["UserName"] == null)
+            {
+                return RedirectToAction("Error");
+            }
+            ViewBag.categoryTypes = GetCategoryTypesList();
+            ViewBag.Action = "CategorySearch";
+            if (CategoryName == null)
+            {
+                return RedirectToAction("Product");
+            }
+            var product = db.Products.Where(s => s.CategoryId == CategoryName).ToList().ToPagedList(page ?? 1, 5);
+            return View("Product",product);
+        }
+
+
+        public ActionResult NameSearch(string searchName, int? page)
         {
             ShopzopEntities db = new ShopzopEntities();
             if (Session["UserID"] != null)
@@ -180,16 +222,17 @@ namespace Shopzop.Controllers
                 if (searchName == "")
                 {
                     //return View(db.Products.Where(model => model.Status == true).ToList());
-                    return View(db.Products.ToList().ToPagedList(page ?? 1, 5));
+                    return RedirectToAction("Product");
                 }
                 else if (ModelState.IsValid)
                 {
                     
                     if (!String.IsNullOrEmpty(searchName))
                     {
-                        
+                        ViewBag.categoryTypes = GetCategoryTypesList();
+                        ViewBag.Action = "NameSearch";
                         var search = db.Products.Where(model => model.ProductName.Contains(searchName)).ToList().ToPagedList(page ?? 1, 5);
-                        return View(search);
+                        return View("Product",search);
 
                     }
                 }

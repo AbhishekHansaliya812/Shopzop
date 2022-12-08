@@ -29,8 +29,8 @@ namespace Shopzop
         [Required(AllowEmptyStrings = false, ErrorMessage = "Please Enter Product Price")]
         public int ProductPrice { get; set; }
 
-        [Display(Name = "Category Id")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Please Enter Category Id")]
+        [Display(Name = "Category")]
+        [Required(ErrorMessage = "Category is Required..")]
         public int CategoryId { get; set; }
         public bool Status { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; } = DateTime.Now;

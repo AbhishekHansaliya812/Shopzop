@@ -24,9 +24,17 @@
         <h2>Products</h2>
     </div>
     <div style="margin-top:50px;">
-        @using (Html.BeginForm("Product", "Login", FormMethod.Post))
+        @using (Html.BeginForm("CategorySearch", "Login", FormMethod.Get))
         {
-            @Html.TextBox("SearchName") <input type="submit" value=" Search" required />
+            @Html.DropDownList("CategoryName", (IEnumerable<SelectListItem>)ViewBag.categoryTypes, "---ALL---", new { @class = "dropdown"})
+            <input type="submit" value="Search"/>
+        }
+
+    </div>
+    <div style="margin-top:50px;">
+        @using (Html.BeginForm("NameSearch", "Login", FormMethod.Get))
+        {
+            @Html.TextBox("SearchName") <input type="submit" value="Search" required />
         }
 
     </div>
@@ -76,6 +84,18 @@
         }
     </tbody>
 </table>
-<div id='Paging'>
-    @Html.PagedListPager(Model, page => Url.Action("Product", new { page, search = Request.QueryString["SearchName"] }), new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded, DisplayPageCountAndCurrentLocation = true, DisplayItemSliceAndTotal = true })
+
+<div id="Paging">
+    @if (ViewBag.Action == "NameSearch")
+    {
+        @Html.PagedListPager(Model, page => Url.Action("NameSearch", new { page, searchName = Request.QueryString["SearchName"] }), new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded, DisplayPageCountAndCurrentLocation = true, DisplayItemSliceAndTotal = true })
+    }
+    else if (ViewBag.Action == "CategorySearch")
+    {
+        @Html.PagedListPager(Model, page => Url.Action("CategorySearch", new { page, CategoryName = Request.QueryString["CategoryName"] }), new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded, DisplayPageCountAndCurrentLocation = true, DisplayItemSliceAndTotal = true })
+    }
+    else
+    {
+        @Html.PagedListPager(Model, page => Url.Action("Product", new { page }), new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded, DisplayPageCountAndCurrentLocation = true, DisplayItemSliceAndTotal = true })
+    }
 </div>
