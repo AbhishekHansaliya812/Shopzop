@@ -1,0 +1,89 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+
+@*@model IEnumerable<Shopzop.Product>*@
+
+@model IPagedList<Shopzop.Product>
+
+@{
+    ViewBag.Title = "Product";
+}
+
+<head>
+    <script type="text/javascript">
+        function preventBack() { window.history.forward(); }
+        setTimeout("preventBack()", 0);
+        window.onunload = function () { null };
+    </script>
+</head>
+
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+
+<div style="display:flex; justify-content:space-between;">
+    <div style="margin-top:20px;">
+        <h2>Products</h2>
+    </div>
+    <div style="margin-top:50px;">
+        @using (Html.BeginForm("Search", "Product", FormMethod.Get))
+        {
+            @Html.DropDownList("CategoryName", (IEnumerable<SelectListItem>)ViewBag.categoryTypes, "---ALL---", new { @class = "dropdown", style="height:26px;" })
+            @Html.TextBox("SearchName", "", new { @class = "", placeholder = "Search here", style="margin-left:5px;" }) <input type="submit" value="Search" required />
+        }
+    </div>
+    <div style="margin-top:50px;">
+        @Html.ActionLink("Add Product", "Add", "Product", new { }, new { @class = "btn btn-success" })
+    </div>
+</div>
+
+<table class="table table-bordered" style="margin-top:20px;">
+    <thead>
+        <tr>
+            @*<th style="text-align:center;">Id</th>*@
+            <th style="text-align:center;">Name</th>
+            <th style="text-align:center;">Description</th>
+            <th style="text-align:center;">Price</th>
+            <th style="text-align:center;">Category</th>
+            <th style="text-align:center;">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                @*<td style="text-align:center;">@item.ProductId</td>*@
+                <td style="text-align:center;">@item.ProductName</td>
+                <td style="text-align:center;">@item.ProductDescription</td>
+                <td style="text-align:center;">₹@item.ProductPrice</td>
+                <td style="text-align:center;">@item.Category.CategoryName</td>
+                <td style="text-align:center; width:190px;">
+                    <div style="display:flex;">
+                        <div style="flex:0 40%;">
+                            @Html.ActionLink("Edit", "Edit", "Product", new { id = item.ProductId }, new { @class = "btn btn-warning" })
+                        </div>
+                        <div style="flex:1;">
+                            @if (item.Status == true)
+                            {
+                                @Html.ActionLink("Inactivate", "Inactivate", "Product", new { id = item.ProductId }, new { @class = "btn btn-danger", onclick = "return confirm('Are you sure you want to Inactivate this Product?')" })
+                            }
+                            @if (item.Status == false)
+                            {
+                                @Html.ActionLink("Activate", "Activate", "Product", new { id = item.ProductId }, new { @class = "btn btn-success", onclick = "return confirm('Are you sure you want to Activate this Product?')" })
+                            }
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div id="Paging">
+    @if (ViewBag.Action == "Search")
+    {
+        @Html.PagedListPager(Model, page => Url.Action("Search", new { page, CategoryName = Request.QueryString["CategoryName"], searchName = Request.QueryString["SearchName"] }), new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded, DisplayPageCountAndCurrentLocation = true, DisplayItemSliceAndTotal = true })
+    }
+    else
+    {
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }), new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded, DisplayPageCountAndCurrentLocation = true, DisplayItemSliceAndTotal = true })
+    }
+</div>

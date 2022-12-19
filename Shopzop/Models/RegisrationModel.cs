@@ -18,7 +18,7 @@ namespace Shopzop.Models
         [Display(Name = "User Name")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Please Enter User Name")]
         [Remote("doesUserNameExist", "Registration", ErrorMessage = "User name already exists. Please enter a different user name.")]
-        [StringLength(20, MinimumLength = 5, ErrorMessage = "UserName length must between 5 to 20..")]
+        [StringLength(20, MinimumLength = 5, ErrorMessage = "User Name length must between 5 to 20..")]
         public string UserName { get; set; }
 
         [Display(Name = "Email")]

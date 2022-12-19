@@ -12,13 +12,14 @@ namespace Shopzop.Controllers
 {
     public class RegistrationController : Controller
     {
-        // GET: Registration
-        public ActionResult Registration()
+        // GET: Index
+        public ActionResult Index()
         {
             return View();
         }
 
-        public ActionResult Register(RegisrationModel model)
+        [HttpPost]
+        public ActionResult Index(RegisrationModel model)
         {
             if (ModelState.IsValid)
             {
@@ -27,10 +28,10 @@ namespace Shopzop.Controllers
             }
             else
             {
-                return View("~/Views/Registration/Registration.cshtml");
+                return View("~/Views/Registration/Index.cshtml");
             }
 
-            return RedirectToAction("Login","Login");
+            return RedirectToAction("Index","Login");
         }
 
         public JsonResult doesUserNameExist(string UserName)

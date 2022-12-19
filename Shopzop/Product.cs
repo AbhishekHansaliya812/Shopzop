@@ -27,6 +27,7 @@ namespace Shopzop
 
         [Display(Name = "Product Price")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Please Enter Product Price")]
+        [RegularExpression("([1-9][0-9]*)", ErrorMessage = "Please Enter Integer Numbers Only")]
         public int ProductPrice { get; set; }
 
         [Display(Name = "Category")]

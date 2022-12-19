@@ -50,7 +50,7 @@
           <Parameter Name="UserName" Type="nvarchar" Mode="In" />
           <Parameter Name="Email" Type="nvarchar" Mode="In" />
           <Parameter Name="Mobile" Type="nvarchar" Mode="In" />
-          <Parameter Name="Password" Type="nvarchar" Mode="In" />
+          <Parameter Name="Password" Type="nvarchar(max)" Mode="In" />
         </Function>
         <EntityContainer Name="ShopzopModelStoreContainer">
           <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />

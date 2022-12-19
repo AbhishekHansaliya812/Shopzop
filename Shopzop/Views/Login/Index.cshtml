@@ -1,6 +1,6 @@
 ﻿@model Shopzop.Models.LoginModel
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Login";
 }
 
 @section scripts{
@@ -44,7 +44,7 @@
                     <td></td>
                     <td>
                         <input type="submit" value="Login" style="margin-left:5px;" />
-                        @Html.ActionLink("Register", "Registration", "Registration", null, new { @style = "float:right; margin-top:5px;" })
+                        @Html.ActionLink("Register", "Index", "Registration", null, new { @style = "float:right; margin-top:5px;" })
                     </td>
                     <td></td>
                 </tr>
