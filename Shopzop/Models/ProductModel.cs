@@ -8,6 +8,7 @@ using System.Xml.Linq;
 
 namespace Shopzop.Models
 {
+    /* ProductModel to validate details of Product */
     public class ProductModel
     {
         [Display(Name = "Product Id")]

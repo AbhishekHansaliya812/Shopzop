@@ -14,6 +14,14 @@
             });
         </script>
     }
+    else if (ViewBag.NotLogin != null)
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+                toastr.error('Please Login', { timeOut: 5000 })
+            });
+        </script>
+    }
 }
 
 <head>

@@ -9,15 +9,19 @@ using Shopzop.Common;
 
 namespace Shopzop.DAL
 {
+    /* Data Access Layer to send new user's data to stored procedures */
     public class RegistrationDataAccessLayer
     {
+        #region SignUpUser
         public string SignUpUser(RegisrationModel model)
         {
+            // Intialising object to encrypt password
             Password encryptPassword = new Password();
-            //PasswordBase64 encryptPassword = new PasswordBase64();
+            // Creating SQL Server coneection
             SqlConnection connection = new SqlConnection("Data Source=(LocalDb)\\MSSQLLocalDB;Initial Catalog=Shopzop;Integrated Security=True");
             try
             {
+                // Sending data to stored procedure
                 SqlCommand command = new SqlCommand("proc_RegisterUser", connection);
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.AddWithValue("@UserName", model.UserName);
@@ -39,5 +43,6 @@ namespace Shopzop.DAL
                 return (ex.Message.ToString());
             }
         }
+        #endregion
     }
 }

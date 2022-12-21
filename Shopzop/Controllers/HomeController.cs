@@ -6,25 +6,14 @@ using System.Web.Mvc;
 
 namespace Shopzop.Controllers
 {
+    /* Controller for Home Page (Dashboard) */
     public class HomeController : Controller
     {
+        #region Index
         public ActionResult Index()
         {
             return View();
         }
-
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
+        #endregion
     }
 }

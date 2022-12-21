@@ -11,6 +11,7 @@ using CompareAttribute = System.Web.Mvc.CompareAttribute;
 
 namespace Shopzop.Models
 {
+    /* RegistrationModel to validate user's data */
     public class RegisrationModel
     {
         public int UserId { get; set; }

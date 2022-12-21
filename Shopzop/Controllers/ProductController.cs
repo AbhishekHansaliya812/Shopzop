@@ -10,18 +10,16 @@ using System.Web.WebPages;
 
 namespace Shopzop.Controllers
 {
+    /* ProductController to view all products, add products, edit products, activate/inactivate products */
     public class ProductController : Controller
     {
-        public ActionResult Error()
-        {
-            return View();
-        }
+        private readonly ShopzopEntities db = new ShopzopEntities();
 
+        #region CategoryList
+        // Category List for dropdown
         private SelectListItem[] GetCategoryTypesList()
         {
             SelectListItem[] categoryTypes = null;
-
-            ShopzopEntities db = new ShopzopEntities();
 
             var items = db.Categories.Select(a => new SelectListItem()
             {
@@ -31,10 +29,6 @@ namespace Shopzop.Controllers
 
             categoryTypes = items.ToArray();
 
-
-            // Have to create new instances via projection
-            // to avoid ModelBinding updates to affect this
-            // globally
             return categoryTypes
                 .Select(d => new SelectListItem()
                 {
@@ -43,18 +37,23 @@ namespace Shopzop.Controllers
                 })
              .ToArray();
         }
+        #endregion
 
+        #region Index - Products View
         public ActionResult Index(int? page)
         {
+            // check for active User Session
             if (Session["UserID"] == null)
             {
-                return View("Error");
+                TempData["NotLogin"] = "Success";
+                // redirect to login page
+                return RedirectToAction("Index","Login");
             }
-            ShopzopEntities db = new ShopzopEntities();
-            //return View(db.Products.Where(model => model.Status == true).ToList());
             ViewBag.categoryTypes = GetCategoryTypesList();
             ViewBag.Action = "Index";
             var product = db.Products.OrderByDescending(o => o.ProductId).ToList().ToPagedList(page ?? 1, 5);
+
+            // toastr messages for adding/editing/activating/inactivating products 
             if (TempData["AddMessage"] != null)
             {
                 ViewBag.AddMessage = "Success";
@@ -73,44 +72,56 @@ namespace Shopzop.Controllers
             }
             return View(product);
         }
+        #endregion
 
+        #region Add View
         public ActionResult Add()
         {
+            // check for active User Session
             if (Session["UserID"] != null)
             {
                 ViewBag.categoryTypes = GetCategoryTypesList();
                 return View();
             }
-            return View("Error");
+            TempData["NotLogin"] = "Success";
+            // redirecting to login page
+            return RedirectToAction("Index", "Login");
         }
+        #endregion
 
+        #region Add Product
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Add(Product product)
         {
             if (ModelState.IsValid)
             {
-                ShopzopEntities db = new ShopzopEntities();
+                // adding product to database
                 db.Products.Add(product);
                 db.SaveChanges();
-                var log = db.ProductsLogs.OrderByDescending(o => o.LogId).ToList().FirstOrDefault();
+                // updating log table in database
+                var log = db.ProductsLogs.OrderByDescending(obj => obj.LogId).ToList().FirstOrDefault();
                 log.UserId = Convert.ToInt32(Session["UserID"]);
                 db.SaveChanges();
                 TempData["AddMessage"] = "Success";
+                // redirecting to products page
                 return RedirectToAction("Index");
             }
             return View(product);
         }
+        #endregion
 
+        #region Edit View
         public ActionResult Edit(int? id)
         {
+            // check for active User Session
             if (Session["UserID"] != null)
             {
                 if (id == null)
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
-                ShopzopEntities db = new ShopzopEntities();
+                // fetching details of product
                 Product product = db.Products.Find(id);
                 if (product == null)
                 {
@@ -119,9 +130,13 @@ namespace Shopzop.Controllers
                 ViewBag.categoryTypes = GetCategoryTypesList();
                 return View(product);
             }
-            return View("Error");
+            TempData["NotLogin"] = "Success";
+            // redirecting to login page
+            return RedirectToAction("Index", "Login");
         }
+        #endregion
 
+        #region Edit Product
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ProductId,ProductName,ProductDescription,ProductPrice,CategoryId,Status,CreateDate")] Product product)
@@ -129,85 +144,110 @@ namespace Shopzop.Controllers
             
             if (ModelState.IsValid)
             {
-                ShopzopEntities db = new ShopzopEntities();
+                // updating changes in product details in database
                 db.Entry(product).State = EntityState.Modified;
                 db.SaveChanges();
-                var log = db.ProductsLogs.OrderByDescending(o => o.LogId).ToList().FirstOrDefault();
+                // updating log table in database
+                var log = db.ProductsLogs.OrderByDescending(obj => obj.LogId).ToList().FirstOrDefault();
                 log.UserId = Convert.ToInt32(Session["UserID"]);
                 db.SaveChanges();
                 TempData["EditMessage"] = "Success";
+                // redirecting to products page
                 return RedirectToAction("Index");
             }
             return View(product);
         }
+        #endregion
 
+        #region Inactivate Product
         public ActionResult Inactivate(int? id)
         {
+            // check for active User Session
             if (Session["UserID"] != null)
             {
-                ShopzopEntities db = new ShopzopEntities();
+                // Inactivating product
                 var Product = db.Products.Find(id);
                 Product.Status = false;
                 db.SaveChanges();
-                var log = db.ProductsLogs.OrderByDescending(o => o.LogId).ToList().FirstOrDefault();
+                // updating log table in database
+                var log = db.ProductsLogs.OrderByDescending(obj => obj.LogId).ToList().FirstOrDefault();
                 log.UserId = Convert.ToInt32(Session["UserID"]);
                 db.SaveChanges();
                 TempData["InactivateMessage"] = "Success";
+                // redirecting to products page
                 return RedirectToAction("Index");
             }
-            return View("Error");
+            TempData["NotLogin"] = "Success";
+            // redirecting to login page
+            return RedirectToAction("Index", "Login");
         }
+        #endregion
 
+        #region Activate Product
         public ActionResult Activate(int? id)
         {
+            // check for active User Session
             if (Session["UserID"] != null)
             {
-                ShopzopEntities db = new ShopzopEntities();
+                // Activating product
                 var Product = db.Products.Find(id);
                 Product.Status = true;
                 db.SaveChanges();
-                var log = db.ProductsLogs.OrderByDescending(o => o.LogId).ToList().FirstOrDefault();
+                // updating log table in database
+                var log = db.ProductsLogs.OrderByDescending(obj => obj.LogId).ToList().FirstOrDefault();
                 log.UserId = Convert.ToInt32(Session["UserID"]);
                 db.SaveChanges();
                 TempData["ActivateMessage"] = "Success";
+                // redirecting to products page
                 return RedirectToAction("Index");
             }
-            return View("Error");
+            TempData["NotLogin"] = "Success";
+            // redirecting to login page
+            return RedirectToAction("Index", "Login");
         }
+        #endregion
 
+        #region Search
         public ActionResult Search(int? CategoryName, string searchName, int? page)
         {
-            ShopzopEntities db = new ShopzopEntities();
+            // check for active User Session
             if (Session["UserName"] == null)
             {
-                return RedirectToAction("Error");
+                TempData["NotLogin"] = "Success";
+                // redirecting to login page
+                return RedirectToAction("Index", "Login");
             }
 
             ViewBag.categoryTypes = GetCategoryTypesList();
             ViewBag.Action = "Search";
 
+            // for empty search it will dispaly all products
             if (CategoryName == null && (searchName == null || searchName.IsEmpty()))
             {
                 return RedirectToAction("Index");
             }
 
+            // displays searched products 
             else if (CategoryName == null)
             {
                 var product = db.Products.Where(s => s.ProductName.Contains(searchName)).OrderByDescending(s => s.ProductId).ToList().ToPagedList(page ?? 1, 5);
                 return View("Index", product);
             }
 
+            // displays category wise products
             else if (CategoryName == null || searchName.IsEmpty())
             {
                 var product = db.Products.Where(s => s.CategoryId == CategoryName).OrderByDescending(s => s.ProductId).ToList().ToPagedList(page ?? 1, 5);
                 return View("Index", product);
             }
 
+            // displays category wise and searched products
             else
             {
                 var product = db.Products.Where(s => s.CategoryId == CategoryName).Where(s => s.ProductName.Contains(searchName)).OrderByDescending(s => s.ProductId).ToList().ToPagedList(page ?? 1, 5);
                 return View("Index", product);
             }   
         }
+        #endregion
     }
 }

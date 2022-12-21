@@ -6,6 +6,7 @@ using System.Web;
 
 namespace Shopzop.Models
 {
+    /* LoginModel to validate required fields */
     public class LoginModel
     {
         [Display(Name = "User Name")]

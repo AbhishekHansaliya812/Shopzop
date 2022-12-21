@@ -8,8 +8,10 @@ using System.Web;
 
 namespace Shopzop.Common
 {
+    /* Class for Password Encryption - Decryption */
     public class Password
     {
+        #region Password Encryption
         public string EncryptPassword(String clearText)
         {
             string EncriptionKey = "MAKVKKKBNI99212";
@@ -31,7 +33,9 @@ namespace Shopzop.Common
             }
             return clearText;
         }
+        #endregion
 
+        #region Password Decryption
         public string DecryptPassword(String cipherText)
         {
             string EncriptionKey = "MAKVKKKBNI99212";
@@ -53,5 +57,6 @@ namespace Shopzop.Common
             }
             return cipherText;
         }
+        #endregion
     }
 }
