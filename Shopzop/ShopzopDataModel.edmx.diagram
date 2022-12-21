@@ -9,6 +9,7 @@
         <EntityTypeShape EntityType="ShopzopModel.Category" Width="1.5" PointX="3.375" PointY="1.375" />
         <EntityTypeShape EntityType="ShopzopModel.Product" Width="1.5" PointX="5.625" PointY="1" />
         <AssociationConnector Association="ShopzopModel.FK_Product_Category" />
+        <EntityTypeShape EntityType="ShopzopModel.ProductsLog" Width="1.5" PointX="0.75" PointY="3.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -22,6 +22,10 @@ namespace Shopzop.Controllers
         public ActionResult Index()
         {
             Session.Clear();
+            if (TempData["ReisterMessage"] != null)
+            {
+                ViewBag.SuccessMessage = "Success";
+            }
             return View();
         }
 

@@ -9,6 +9,41 @@
     ViewBag.Title = "Product";
 }
 
+@section scripts{
+    @if (ViewBag.AddMessage != null)
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+                toastr.success('Product Added Succesfully', { timeOut: 5000 })
+            });
+        </script>
+    }
+    else if (ViewBag.EditMessage != null)
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+                toastr.warning('Product Edited Succesfully', { timeOut: 5000 })
+            });
+        </script>
+    }
+    else if (ViewBag.InactivateMessage != null)
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+                toastr.error('Product Inactivated Succesfully', { timeOut: 5000 })
+            });
+        </script>
+    }
+    else if (ViewBag.ActivateMessage != null)
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+                toastr.success('Product Activated Succesfully', { timeOut: 5000 })
+            });
+        </script>
+    }
+}
+
 <head>
     <script type="text/javascript">
         function preventBack() { window.history.forward(); }
@@ -26,8 +61,8 @@
     <div style="margin-top:50px;">
         @using (Html.BeginForm("Search", "Product", FormMethod.Get))
         {
-            @Html.DropDownList("CategoryName", (IEnumerable<SelectListItem>)ViewBag.categoryTypes, "---ALL---", new { @class = "dropdown", style="height:26px;" })
-            @Html.TextBox("SearchName", "", new { @class = "", placeholder = "Search here", style="margin-left:5px;" }) <input type="submit" value="Search" required />
+            @Html.DropDownList("CategoryName", (IEnumerable<SelectListItem>)ViewBag.categoryTypes, "---ALL---", new { @class = "dropdown", style = "height:26px;" })
+            @Html.TextBox("SearchName", "", new { @class = "", placeholder = "Search here", style = "margin-left:5px;" }) <input type="submit" value="Search" required />
         }
     </div>
     <div style="margin-top:50px;">

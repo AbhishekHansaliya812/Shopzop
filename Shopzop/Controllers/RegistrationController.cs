@@ -30,7 +30,7 @@ namespace Shopzop.Controllers
             {
                 return View("~/Views/Registration/Index.cshtml");
             }
-
+            TempData["ReisterMessage"] = "Success";
             return RedirectToAction("Index","Login");
         }
 

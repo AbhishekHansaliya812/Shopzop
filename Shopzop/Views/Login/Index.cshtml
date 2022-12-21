@@ -5,6 +5,15 @@
 
 @section scripts{
     @Scripts.Render("~/bundles/jqueryval");
+
+    @if (ViewBag.SuccessMessage != null)
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+                toastr.success('User Created Succesfully', { timeOut: 5000 })
+            });
+        </script>
+    }
 }
 
 <head>
@@ -33,12 +42,12 @@
                 <tr>
                     <td>@Html.LabelFor(model => model.UserName)</td>
                     <td>@Html.TextBoxFor(model => model.UserName, new { @class = "", placeholder = "Enter User Name", style = "margin-bottom:5px; margin-left:5px; margin-right:5px" })</td>
-                    <td>@Html.ValidationMessageFor(model => model.UserName)</td>
+                    <td>@Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })</td>
                 </tr>
                 <tr>
                     <td>@Html.LabelFor(model => model.Password)</td>
                     <td>@Html.PasswordFor(model => model.Password, new { @class = "", placeholder = "Enter Password", style = "margin-bottom:5px; margin-left:5px;" })</td>
-                    <td>@Html.ValidationMessageFor(model => model.Password)</td>
+                    <td>@Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })</td>
                 </tr>
                 <tr>
                     <td></td>

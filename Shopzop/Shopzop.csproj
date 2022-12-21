@@ -267,6 +267,9 @@
     <Compile Include="Product.cs">
       <DependentUpon>ShopzopDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="ProductsLog.cs">
+      <DependentUpon>ShopzopDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShopzopDataModel.Context.cs">
       <AutoGen>True</AutoGen>

@@ -55,6 +55,22 @@ namespace Shopzop.Controllers
             ViewBag.categoryTypes = GetCategoryTypesList();
             ViewBag.Action = "Index";
             var product = db.Products.OrderByDescending(o => o.ProductId).ToList().ToPagedList(page ?? 1, 5);
+            if (TempData["AddMessage"] != null)
+            {
+                ViewBag.AddMessage = "Success";
+            }
+            else if (TempData["EditMessage"] != null)
+            {
+                ViewBag.EditMessage = "Success";
+            }
+            else if (TempData["InactivateMessage"] != null)
+            {
+                ViewBag.InactivateMessage = "Success";
+            }
+            else if (TempData["ActivateMessage"] != null)
+            {
+                ViewBag.ActivateMessage = "Success";
+            }
             return View(product);
         }
 
@@ -77,12 +93,16 @@ namespace Shopzop.Controllers
                 ShopzopEntities db = new ShopzopEntities();
                 db.Products.Add(product);
                 db.SaveChanges();
+                var log = db.ProductsLogs.OrderByDescending(o => o.LogId).ToList().FirstOrDefault();
+                log.UserId = Convert.ToInt32(Session["UserID"]);
+                db.SaveChanges();
+                TempData["AddMessage"] = "Success";
                 return RedirectToAction("Index");
             }
             return View(product);
         }
 
-        public ActionResult Edit(int? id, int? page)
+        public ActionResult Edit(int? id)
         {
             if (Session["UserID"] != null)
             {
@@ -97,25 +117,28 @@ namespace Shopzop.Controllers
                     return HttpNotFound();
                 }
                 ViewBag.categoryTypes = GetCategoryTypesList();
-                ViewBag.ActionMethod = "Edit";
-                ViewBag.page = page;
-                return View("Index",product);
+                return View(product);
             }
             return View("Error");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ProductId,ProductName,ProductDescription,ProductPrice,CategoryId,Status,CreateDate")] Product product, int pageNum)
+        public ActionResult Edit([Bind(Include = "ProductId,ProductName,ProductDescription,ProductPrice,CategoryId,Status,CreateDate")] Product product)
         {
+            
             if (ModelState.IsValid)
             {
                 ShopzopEntities db = new ShopzopEntities();
                 db.Entry(product).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index", "Product", new { page = pageNum});
+                var log = db.ProductsLogs.OrderByDescending(o => o.LogId).ToList().FirstOrDefault();
+                log.UserId = Convert.ToInt32(Session["UserID"]);
+                db.SaveChanges();
+                TempData["EditMessage"] = "Success";
+                return RedirectToAction("Index");
             }
-            return View("Index",product);
+            return View(product);
         }
 
         public ActionResult Inactivate(int? id)
@@ -126,6 +149,10 @@ namespace Shopzop.Controllers
                 var Product = db.Products.Find(id);
                 Product.Status = false;
                 db.SaveChanges();
+                var log = db.ProductsLogs.OrderByDescending(o => o.LogId).ToList().FirstOrDefault();
+                log.UserId = Convert.ToInt32(Session["UserID"]);
+                db.SaveChanges();
+                TempData["InactivateMessage"] = "Success";
                 return RedirectToAction("Index");
             }
             return View("Error");
@@ -139,6 +166,10 @@ namespace Shopzop.Controllers
                 var Product = db.Products.Find(id);
                 Product.Status = true;
                 db.SaveChanges();
+                var log = db.ProductsLogs.OrderByDescending(o => o.LogId).ToList().FirstOrDefault();
+                log.UserId = Convert.ToInt32(Session["UserID"]);
+                db.SaveChanges();
+                TempData["ActivateMessage"] = "Success";
                 return RedirectToAction("Index");
             }
             return View("Error");

@@ -30,6 +30,7 @@ namespace Shopzop
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<ProductsLog> ProductsLogs { get; set; }
     
         public virtual int proc_RegisterUser(string userName, string email, string mobile, string password)
         {
