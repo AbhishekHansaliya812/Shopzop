@@ -30,7 +30,7 @@ namespace Shopzop.Models
         public string Email { get; set; }
 
         [Display(Name = "Mobile")]
-        [StringLength(10,MinimumLength=10, ErrorMessage = "Mobile Number must be of 10 digits.")]
+        [RegularExpression(("^[0-9]{10}$"), ErrorMessage = "Please enter valid Mobile Number")]
         [DataType(DataType.PhoneNumber)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Please Enter Mobile")]
         public string Mobile { get; set; }
@@ -43,11 +43,9 @@ namespace Shopzop.Models
         public string Password { get; set; }
 
         [Display(Name = "Confirm password")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Please Enter Password")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Please Enter Confirm Password")]
         [DataType(DataType.Password)]
-        [StringLength(20, MinimumLength = 8, ErrorMessage = "Password length must between 8 to 20..")]
         [Compare("Password", ErrorMessage = "Password and Confirmation Password does not match.")]
-        [RegularExpression(("[^ ]+$"), ErrorMessage = "Space is not allowed in password")]
         public string ConfirmPassword { get; set; }
     }
 }

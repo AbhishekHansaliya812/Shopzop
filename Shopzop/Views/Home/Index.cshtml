@@ -1,7 +1,19 @@
 ﻿@{
     ViewBag.Title = "Home Page";
 }
-<div class="row" style="padding-top:200px;">
-    <center><h1>Welcome to Shopzop</h1></center>
-</div>
-   
+
+<body style="background-image: url(../../Images/ShopzopBG.png); background-position-x: center; overflow:clip; background-position-y: bottom; background-attachment: fixed; background-repeat: no-repeat;">
+
+    @if (Session["UserId"] == null)
+    {
+        <div class="row" style="padding-top:40px;">
+            <center><h1>Welcome to Shopzop</h1></center>
+        </div>
+    }
+    @if (Session["UserId"] != null)
+    {
+        <div class="row" style="padding-top:40px;">
+            <center><h1>Welcome @Session["UserName"]</h1></center>
+        </div>
+    }
+</body>

@@ -106,44 +106,62 @@ namespace Shopzop.Controllers
         }
         #endregion
 
+        #region ForgetPassword View
         public ActionResult ForgetPassword()
         {
             return View();
         }
+        #endregion
 
+        #region ForgetPassword Validate Username
         [HttpPost]
         public ActionResult ForgetPassword(string UserName)
         {
-            var user = db.Users.ToList().Where(obj => obj.UserName == UserName).FirstOrDefault();
+            try
+            {
+                var user = db.Users.ToList().Where(obj => obj.UserName == UserName).FirstOrDefault();
 
-            if (user != null)
-            {
-                SendEmail(user.Email);
+                if (user != null)
+                {
+                    SendEmail(user.Email);
+                }
+                else
+                {
+                    ViewBag.InvalidUserName = "Success";
+                    return View();
+                }
+                TempData["EmailSent"] = "Success";
+                // Redirecting to Login Page
+                return RedirectToAction("Index", "Login");
             }
-            else
+            catch (Exception ex)
             {
-                ViewBag.InvalidUserName = "Success";
-                return View();
+                // log the error message in log file
+                logger.Error(ex, "LoginController ForgetPassword[Post] Action");
+
+                // return the error view with message
+                ViewBag.errorMessage = "Something went wrong please try again..";
+                return View("Error");
             }
-            TempData["EmailSent"] = "Success";
-            return RedirectToAction("Index", "Login");
         }
+        #endregion
 
+        #region SendEmail for Froget Password
         public void SendEmail(string Email)
         {
             var user = db.Users.ToList().Where(obj => obj.Email == Email).FirstOrDefault();
 
-            // if condition is pending for verification
-
+            // Email Address
             var fromEmail = new MailAddress("autodidact.project4@gmail.com", "Shopzop Support Center");
             var toEmail = new MailAddress(Email);
 
             var fromEmailPassword = "****************";
 
 
-
+            // Email Subject
             string subject = "Password Recovery";
 
+            // Email Body
             string body = "<br/> Hello " + user.UserName +
                             "<br/><br/> We have successfuly processed your request for forget password." +
                             "<br/><br/> Your <br/> User Name : " + user.UserName +
@@ -169,6 +187,7 @@ namespace Shopzop.Controllers
                 IsBodyHtml = true
             }) smtpRequest.Send(message);
         }
+        #endregion
 
         #region Error Page
         public ActionResult Error()
