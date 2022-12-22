@@ -10,15 +10,22 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.UI;
 using Microsoft.Ajax.Utilities;
+using Microsoft.Extensions.Logging;
+using NLog;
 using PagedList;
 using Shopzop.Common;
 using Shopzop.Models;
+using WebGrease;
+using LogManager = NLog.LogManager;
 
 namespace Shopzop.Controllers
 {
     /* LoginController to authenticate user while Login and to Logout from application */
     public class LoginController : Controller
     {
+        // Private readonly variables
+        private readonly Logger logger = LogManager.GetCurrentClassLogger();
+
         #region Index - Login View
         public ActionResult Index()
         {
@@ -44,29 +51,42 @@ namespace Shopzop.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Index(LoginModel user)
         {
-            if (ModelState.IsValid)
+            try
             {
-                // intialising object for password decryption
-                Password decryptPassword = new Password();
-                using (ShopzopEntities db = new ShopzopEntities())
+                if (ModelState.IsValid)
                 {
-                    // authenticating user name and password
-                    var obj = db.Users.ToList().Where(model => model.UserName.Equals(user.UserName) && decryptPassword.DecryptPassword(model.Password).Equals(user.Password)).FirstOrDefault();
-                    if (obj != null && decryptPassword.DecryptPassword(obj.Password) == user.Password)
+                    // intialising object for password decryption
+                    Password decryptPassword = new Password();
+                    using (ShopzopEntities db = new ShopzopEntities())
                     {
-                        // Intiating User Session
-                        Session["UserID"] = obj.UserId.ToString();
-                        Session["UserName"] = obj.UserName.ToString();
-                        // Redirecting to Product Page
-                        return RedirectToAction("Index", "Product");
-                    }
-                    else
-                    {
-                        ViewBag.Message = "User Name or Password is incorrect";
+                        // authenticating user name and password
+                        var obj = db.Users.ToList().Where(model => model.UserName.Equals(user.UserName) && decryptPassword.DecryptPassword(model.Password).Equals(user.Password)).FirstOrDefault();
+                        if (obj != null && decryptPassword.DecryptPassword(obj.Password) == user.Password)
+                        {
+                            // Intiating User Session
+                            Session["UserID"] = obj.UserId.ToString();
+                            Session["UserName"] = obj.UserName.ToString();
+
+                            // Redirecting to Product Page
+                            return RedirectToAction("Index", "Product");
+                        }
+                        else
+                        {
+                            ViewBag.Message = "User Name or Password is incorrect";
+                        }
                     }
                 }
+                return View(user);
             }
-            return View(user);
+            catch (Exception ex)
+            {
+                // log the error message in log file
+                logger.Error(ex, "LoginController Index[Post] Action");
+
+                // return the error view with message
+                ViewBag.errorMessage = "Something went wrong please try again..";
+                return View("Error");
+            }
         }
         #endregion
 
@@ -75,8 +95,16 @@ namespace Shopzop.Controllers
         {
             // Session will be terminated
             Session["UserId"] = null;
+
             // redirecting to Login page
             return RedirectToAction("Index");
+        }
+        #endregion
+
+        #region Error Page
+        public ActionResult Error()
+        {
+            return View();
         }
         #endregion
     }

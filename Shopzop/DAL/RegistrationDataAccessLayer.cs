@@ -6,12 +6,18 @@ using System.Linq;
 using System.Web;
 using Shopzop.Models;
 using Shopzop.Common;
+using NLog;
+using System.Web.Mvc;
 
 namespace Shopzop.DAL
 {
     /* Data Access Layer to send new user's data to stored procedures */
     public class RegistrationDataAccessLayer
     {
+
+        // Private readonly variables
+        private readonly Logger logger = LogManager.GetCurrentClassLogger();
+
         #region SignUpUser
         public string SignUpUser(RegisrationModel model)
         {
@@ -36,6 +42,8 @@ namespace Shopzop.DAL
             }
             catch (Exception ex)
             {
+                // log the error message in log file
+                logger.Error(ex, "Registration DAL Method");
                 if (connection.State == ConnectionState.Open)
                 {
                     connection.Close();

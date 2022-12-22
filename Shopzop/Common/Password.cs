@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
+using System.Web.Mvc;
 
 namespace Shopzop.Common
 {
@@ -24,7 +25,7 @@ namespace Shopzop.Common
                 using (MemoryStream ms = new MemoryStream())
                 {
                     using (CryptoStream cs = new CryptoStream(ms, encryptor.CreateEncryptor(), CryptoStreamMode.Write))
-                    { 
+                    {
                         cs.Write(clearBytes, 0, clearBytes.Length);
                         cs.Close();
                     }
