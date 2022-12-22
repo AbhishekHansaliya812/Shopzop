@@ -27,7 +27,7 @@
                     <tr>
                         <td>@Html.LabelFor(model => model.UserName)</td>
                         <td>@Html.TextBoxFor(model => model.UserName, new { @class = "", placeholder = "Enter User Name", style = "margin-bottom:10px; margin-left:10px; margin-right:5px;" })</td>
-                        <td style="margin-bottom:10px;">@Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })</td>
+                        <td>@Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })</td>
                     </tr>
                     <tr>
                         <td>@Html.LabelFor(model => model.Email)</td>

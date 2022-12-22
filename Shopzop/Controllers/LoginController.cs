@@ -109,6 +109,7 @@ namespace Shopzop.Controllers
         #region ForgetPassword View
         public ActionResult ForgetPassword()
         {
+            ViewBag.MailInfo = "Success";
             return View();
         }
         #endregion
@@ -170,6 +171,7 @@ namespace Shopzop.Controllers
                             "<br/><br/> Regards" +
                             "<br/> Shopzop Support Center";
 
+            // SMTP Connection
             var smtpRequest = new SmtpClient
             {
                 Host = "smtp.gmail.com",
@@ -180,6 +182,7 @@ namespace Shopzop.Controllers
                 Credentials = new NetworkCredential(fromEmail.Address, fromEmailPassword)
             };
 
+            // Send Email
             using (var message = new MailMessage(fromEmail, toEmail)
             {
                 Subject = subject,

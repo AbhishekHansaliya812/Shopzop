@@ -27,11 +27,11 @@ namespace Shopzop
 
         [Display(Name = "Product Price")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Please Enter Product Price")]
-        [RegularExpression("([1-9][0-9]*)", ErrorMessage = "Please Enter Integer Numbers Only")]
+        [RegularExpression("([1-9][0-9]*)", ErrorMessage = "Please Enter Valid Price")]
         public int ProductPrice { get; set; }
 
         [Display(Name = "Category")]
-        [Required(ErrorMessage = "Category is Required..")]
+        [Required(ErrorMessage = "Category is Required")]
         public int CategoryId { get; set; }
         public bool Status { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; } = DateTime.Now;
