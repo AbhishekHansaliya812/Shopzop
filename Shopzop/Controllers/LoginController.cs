@@ -138,7 +138,7 @@ namespace Shopzop.Controllers
             var fromEmail = new MailAddress("autodidact.project4@gmail.com", "Shopzop Support Center");
             var toEmail = new MailAddress(Email);
 
-            var fromEmailPassword = "fzaluwxxhaojodls";
+            var fromEmailPassword = "****************";
 
 
 
