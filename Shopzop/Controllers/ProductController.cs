@@ -347,5 +347,12 @@ namespace Shopzop.Controllers
             }
         }
         #endregion
+
+        #region Error Page
+        public ActionResult Error()
+        {
+            return View();
+        }
+        #endregion
     }
 }

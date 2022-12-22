@@ -25,6 +25,7 @@ namespace Shopzop.Models
 
         [Display(Name = "Email")]
         [EmailAddress(ErrorMessage = "Please Enter Valid Email..")]
+        [RegularExpression(("^[a-zA-Z0-9_\\.-]+@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$"), ErrorMessage = "Please Enter Valid Email..")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Please Enter Email")]
         public string Email { get; set; }
 

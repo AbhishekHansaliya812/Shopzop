@@ -22,6 +22,22 @@
             });
         </script>
     }
+    else if (ViewBag.EmailSent != null)
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+                toastr.success('Email Sent', { timeOut: 5000 })
+            });
+        </script>
+    }
+    else if (ViewBag.InvalidUserNamePassword != null)
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+                toastr.error('User Name or Password is incorrect', { timeOut: 5000 })
+            });
+        </script>
+    }
 }
 
 <head>
@@ -39,12 +55,6 @@
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true)
 
-        @if (@ViewBag.Message != null)
-        {
-            <div style="border: 1px solid red; margin-bottom:10px;">
-                @ViewBag.Message
-            </div>
-        }
         <div>
             <table>
                 <tr>
@@ -62,6 +72,13 @@
                     <td>
                         <input type="submit" value="Login" style="margin-left:5px;" />
                         @Html.ActionLink("Register", "Index", "Registration", null, new { @style = "float:right; margin-top:5px;" })
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        @Html.ActionLink("Forgot Password", "ForgetPassword", "Login", null, new { @style = "float:center; margin-top:5px;" })
                     </td>
                     <td></td>
                 </tr>

@@ -66,5 +66,12 @@ namespace Shopzop.Controllers
             return Json(!db.Users.Any(x => x.UserName == UserName), JsonRequestBehavior.AllowGet);
         }
         #endregion
+
+        #region Error Page
+        public ActionResult Error()
+        {
+            return View();
+        }
+        #endregion
     }
 }

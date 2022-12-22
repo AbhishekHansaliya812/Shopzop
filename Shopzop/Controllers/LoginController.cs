@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -25,6 +26,8 @@ namespace Shopzop.Controllers
     {
         // Private readonly variables
         private readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private readonly ShopzopEntities db = new ShopzopEntities();
+        private readonly Password decryptPassword = new Password();
 
         #region Index - Login View
         public ActionResult Index()
@@ -42,6 +45,10 @@ namespace Shopzop.Controllers
             {
                 ViewBag.NotLogin = "Success";
             }
+            else if (TempData["EmailSent"] != null)
+            {
+                ViewBag.EmailSent = "Success";
+            }
             return View();
         }
         #endregion
@@ -55,8 +62,6 @@ namespace Shopzop.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    // intialising object for password decryption
-                    Password decryptPassword = new Password();
                     using (ShopzopEntities db = new ShopzopEntities())
                     {
                         // authenticating user name and password
@@ -72,7 +77,7 @@ namespace Shopzop.Controllers
                         }
                         else
                         {
-                            ViewBag.Message = "User Name or Password is incorrect";
+                            ViewBag.InvalidUserNamePassword = "Success";
                         }
                     }
                 }
@@ -100,6 +105,70 @@ namespace Shopzop.Controllers
             return RedirectToAction("Index");
         }
         #endregion
+
+        public ActionResult ForgetPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ForgetPassword(string UserName)
+        {
+            var user = db.Users.ToList().Where(obj => obj.UserName == UserName).FirstOrDefault();
+
+            if (user != null)
+            {
+                SendEmail(user.Email);
+            }
+            else
+            {
+                ViewBag.InvalidUserName = "Success";
+                return View();
+            }
+            TempData["EmailSent"] = "Success";
+            return RedirectToAction("Index", "Login");
+        }
+
+        public void SendEmail(string Email)
+        {
+            var user = db.Users.ToList().Where(obj => obj.Email == Email).FirstOrDefault();
+
+            // if condition is pending for verification
+
+            var fromEmail = new MailAddress("autodidact.project4@gmail.com", "Shopzop Support Center");
+            var toEmail = new MailAddress(Email);
+
+            var fromEmailPassword = "fzaluwxxhaojodls";
+
+
+
+            string subject = "Password Recovery";
+
+            string body = "<br/> Hello " + user.UserName +
+                            "<br/><br/> We have successfuly processed your request for forget password." +
+                            "<br/><br/> Your <br/> User Name : " + user.UserName +
+                            "<br/>      Password : " + decryptPassword.DecryptPassword(user.Password) +
+                            "<br/><br/> We were happy to help you..! :)" +
+                            "<br/><br/> Regards" +
+                            "<br/> Shopzop Support Center";
+
+            var smtpRequest = new SmtpClient
+            {
+                Host = "smtp.gmail.com",
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(fromEmail.Address, fromEmailPassword)
+            };
+
+            using (var message = new MailMessage(fromEmail, toEmail)
+            {
+                Subject = subject,
+                Body = body,
+                IsBodyHtml = true
+            }) smtpRequest.Send(message);
+        }
 
         #region Error Page
         public ActionResult Error()
