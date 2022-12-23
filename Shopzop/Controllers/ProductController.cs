@@ -14,6 +14,7 @@ namespace Shopzop.Controllers
     /* ProductController to view all products, add products, edit products, activate/inactivate products */
     public class ProductController : Controller
     {
+        
         // Private readonly variables
         private readonly ShopzopEntities db = new ShopzopEntities();
         private readonly Logger logger = LogManager.GetCurrentClassLogger();
@@ -160,16 +161,21 @@ namespace Shopzop.Controllers
                 {
                     if (id == null)
                     {
-                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                        ViewBag.errorMessage = "Something went wrong please try again..";
+                        return View("Error");
                     }
                     // fetching details of product
                     Product product = db.Products.Find(id);
                     if (product == null)
                     {
-                        return HttpNotFound();
+                        ViewBag.errorMessage = "Something went wrong please try again..";
+                        return View("Error");
                     }
-                    ViewBag.categoryTypes = GetCategoryTypesList();
-                    return View(product);
+                    else 
+                    {
+                        ViewBag.categoryTypes = GetCategoryTypesList();
+                        return View(product);
+                    }  
                 }
                 TempData["NotLogin"] = "Success";
                 // redirecting to login page
