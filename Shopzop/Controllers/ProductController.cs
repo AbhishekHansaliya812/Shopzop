@@ -43,7 +43,7 @@ namespace Shopzop.Controllers
         }
         #endregion
 
-        #region Index - Products View
+        #region Index Method - Products
         public ActionResult Index(int? page)
         {
             try
@@ -90,7 +90,7 @@ namespace Shopzop.Controllers
         }
         #endregion
 
-        #region Add View
+        #region Add Method
         public ActionResult Add()
         {
             try
@@ -117,7 +117,7 @@ namespace Shopzop.Controllers
         }
         #endregion
 
-        #region Add Product
+        #region Add Method - Product
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Add(Product product)
@@ -151,7 +151,7 @@ namespace Shopzop.Controllers
         }
         #endregion
 
-        #region Edit View
+        #region Edit Method - Fetch Product Detail
         public ActionResult Edit(int? id)
         {
             try
@@ -193,7 +193,7 @@ namespace Shopzop.Controllers
         }
         #endregion
 
-        #region Edit Product
+        #region Edit Method - Product
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ProductId,ProductName,ProductDescription,ProductPrice,CategoryId,Status,CreateDate")] Product product)
@@ -227,7 +227,7 @@ namespace Shopzop.Controllers
         }
         #endregion
 
-        #region Inactivate Product
+        #region Inactivate Method - Product
         public ActionResult Inactivate(int? id)
         {
             try
@@ -263,7 +263,7 @@ namespace Shopzop.Controllers
         }
         #endregion
 
-        #region Activate Product
+        #region Activate Method - Product
         public ActionResult Activate(int? id)
         {
             try
@@ -299,7 +299,7 @@ namespace Shopzop.Controllers
         }
         #endregion
 
-        #region Search
+        #region Search Method
         public ActionResult Search(int? CategoryName, string searchName, int? page)
         {
             try
@@ -354,7 +354,7 @@ namespace Shopzop.Controllers
         }
         #endregion
 
-        #region Error Page
+        #region Error Method
         public ActionResult Error()
         {
             return View();

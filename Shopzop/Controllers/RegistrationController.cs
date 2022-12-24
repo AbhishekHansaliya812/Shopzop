@@ -19,14 +19,14 @@ namespace Shopzop.Controllers
         private readonly ShopzopEntities db = new ShopzopEntities();
         private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        #region Index View
+        #region Index Method
         public ActionResult Index()
         {
             return View();
         }
         #endregion
 
-        #region Index - Register User
+        #region Index Method - Register User
         [HttpPost]
         public ActionResult Index(RegisrationModel model)
         {
@@ -59,15 +59,15 @@ namespace Shopzop.Controllers
         }
         #endregion
 
-        #region Unique UserName
-        public JsonResult doesUserNameExist(string UserName)
+        #region DoesUserNameExist Method - Unique UserName
+        public JsonResult DoesUserNameExist(string UserName)
         {
             // checking if username already exist in database
             return Json(!db.Users.Any(x => x.UserName == UserName), JsonRequestBehavior.AllowGet);
         }
         #endregion
 
-        #region Error Page
+        #region Error Method
         public ActionResult Error()
         {
             return View();

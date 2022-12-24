@@ -29,7 +29,7 @@ namespace Shopzop.Controllers
         private readonly ShopzopEntities db = new ShopzopEntities();
         private readonly Password decryptPassword = new Password();
 
-        #region Index - Login View
+        #region Index Method - Login
         public ActionResult Index()
         {
             // clears the existing user session
@@ -53,7 +53,7 @@ namespace Shopzop.Controllers
         }
         #endregion
 
-        #region Index - Authenticate User
+        #region Index Method - Authenticate User
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Index(LoginModel user)
@@ -95,7 +95,7 @@ namespace Shopzop.Controllers
         }
         #endregion
 
-        #region Logout
+        #region Logout Method
         public ActionResult Logout()
         {
             // Session will be terminated
@@ -106,7 +106,7 @@ namespace Shopzop.Controllers
         }
         #endregion
 
-        #region ForgetPassword View
+        #region ForgetPassword Method
         public ActionResult ForgetPassword()
         {
             ViewBag.MailInfo = "Success";
@@ -114,7 +114,7 @@ namespace Shopzop.Controllers
         }
         #endregion
 
-        #region ForgetPassword Validate Username
+        #region ForgetPassword Method - Validate Username
         [HttpPost]
         public ActionResult ForgetPassword(string UserName)
         {
@@ -147,7 +147,7 @@ namespace Shopzop.Controllers
         }
         #endregion
 
-        #region SendEmail for Froget Password
+        #region SendEmail Method - Froget Password 
         public void SendEmail(string Email)
         {
             var user = db.Users.ToList().Where(obj => obj.Email == Email).FirstOrDefault();
@@ -192,7 +192,7 @@ namespace Shopzop.Controllers
         }
         #endregion
 
-        #region Error Page
+        #region Error Method
         public ActionResult Error()
         {
             return View();
