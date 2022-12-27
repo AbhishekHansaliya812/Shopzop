@@ -54,4 +54,3 @@ namespace Shopzop.DAL
         #endregion
     }
 }
-
