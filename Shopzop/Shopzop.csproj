@@ -304,7 +304,6 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Images\ShopzopBG.png" />
-    <Content Include="Images\ShopzopBG1.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="NLog.config">
@@ -356,7 +355,6 @@
       <DependentUpon>ShopzopDataModel.edmx</DependentUpon>
     </Content>
     <Content Include="Views\Product\Add.cshtml" />
-    <Content Include="Views\Product\Delete.cshtml" />
     <Content Include="Views\Product\Edit.cshtml" />
     <Content Include="Views\Product\Error.cshtml" />
     <Content Include="Views\Product\Index.cshtml" />
