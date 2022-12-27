@@ -48,18 +48,18 @@ namespace Shopzop.Controllers
         {
             try
             {
-                // check for active User Session
+                // Check for active User Session
                 if (Session["UserID"] == null)
                 {
                     TempData["NotLogin"] = "Success";
-                    // redirect to login page
+                    // Redirect to login page
                     return RedirectToAction("Index", "Login");
                 }
                 ViewBag.categoryTypes = GetCategoryTypesList();
                 ViewBag.Action = "Index";
                 var product = db.Products.OrderByDescending(o => o.ProductId).ToList().ToPagedList(page ?? 1, 5);
 
-                // toastr messages for adding/editing/activating/inactivating products 
+                // Toastr messages for adding/editing/activating/inactivating products 
                 if (TempData["AddMessage"] != null)
                 {
                     ViewBag.AddMessage = "Success";
@@ -80,10 +80,10 @@ namespace Shopzop.Controllers
             }
             catch (Exception ex)
             {
-                // log the error message in log file
+                // Log the error message
                 logger.Error(ex, "ProductController Index Action");
 
-                // return the error view with message
+                // Return the error view with message
                 ViewBag.errorMessage = "Something went wrong please try again..";
                 return View("Error");
             }
@@ -95,22 +95,22 @@ namespace Shopzop.Controllers
         {
             try
             {
-                // check for active User Session
+                // Check for active User Session
                 if (Session["UserID"] != null)
                 {
                     ViewBag.categoryTypes = GetCategoryTypesList();
                     return View();
                 }
                 TempData["NotLogin"] = "Success";
-                // redirecting to login page
+                // Redirecting to login page
                 return RedirectToAction("Index", "Login");
             }
             catch (Exception ex)
             {
-                // log the error message in log file
+                // Log the error message
                 logger.Error(ex, "ProductController Add Action");
 
-                // return the error view with message
+                // Return the error view with message
                 ViewBag.errorMessage = "Something went wrong please try again..";
                 return View("Error");
             }
@@ -126,25 +126,29 @@ namespace Shopzop.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    // adding product to database
+                    // Adding product to database
                     db.Products.Add(product);
                     db.SaveChanges();
-                    // updating log table in database
+                    // Updating log table in database
                     var log = db.ProductsLogs.OrderByDescending(obj => obj.LogId).ToList().FirstOrDefault();
                     log.UserId = Convert.ToInt32(Session["UserID"]);
                     db.SaveChanges();
                     TempData["AddMessage"] = "Success";
-                    // redirecting to products page
+
+                    // Log the added product information
+                    logger.Info("Product Added by User Id :" + " " + Session["UserId"] + " , Product Id :" + " " + product.ProductId);
+
+                    // Redirecting to products page
                     return RedirectToAction("Index");
                 }
                 return View(product);
             }
             catch (Exception ex)
             {
-                // log the error message in log file
+                // Log the error message in log file
                 logger.Error(ex, "ProductController Add[Post] Action");
 
-                // return the error view with message
+                // Return the error view with message
                 ViewBag.errorMessage = "Something went wrong please try again..";
                 return View("Error");
             }
@@ -156,7 +160,7 @@ namespace Shopzop.Controllers
         {
             try
             {
-                // check for active User Session
+                // Check for active User Session
                 if (Session["UserID"] != null)
                 {
                     if (id == null)
@@ -164,7 +168,7 @@ namespace Shopzop.Controllers
                         ViewBag.errorMessage = "Something went wrong please try again..";
                         return View("Error");
                     }
-                    // fetching details of product
+                    // Fetching details of product
                     Product product = db.Products.Find(id);
                     if (product == null)
                     {
@@ -178,15 +182,15 @@ namespace Shopzop.Controllers
                     }  
                 }
                 TempData["NotLogin"] = "Success";
-                // redirecting to login page
+                // Redirecting to login page
                 return RedirectToAction("Index", "Login");
             }
             catch (Exception ex)
             {
-                // log the error message in log file
+                // Log the error message in log file
                 logger.Error(ex, "ProductController Edit Action");
 
-                // return the error view with message
+                // Return the error view with message
                 ViewBag.errorMessage = "Something went wrong please try again..";
                 return View("Error");
             }
@@ -202,25 +206,29 @@ namespace Shopzop.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    // updating changes in product details in database
+                    // Updating changes in product details in database
                     db.Entry(product).State = EntityState.Modified;
                     db.SaveChanges();
-                    // updating log table in database
+                    // Updating log table in database
                     var log = db.ProductsLogs.OrderByDescending(obj => obj.LogId).ToList().FirstOrDefault();
                     log.UserId = Convert.ToInt32(Session["UserID"]);
                     db.SaveChanges();
                     TempData["EditMessage"] = "Success";
-                    // redirecting to products page
+
+                    // Log the edited product information
+                    logger.Info("Product Edited by User Id :" + " " + Session["UserId"] + " , Product Id :" + " " + product.ProductId);
+
+                    // Redirecting to products page
                     return RedirectToAction("Index");
                 }
                 return View(product);
             }
             catch (Exception ex)
             {
-                // log the error message in log file
+                // Log the error message in log file
                 logger.Error(ex, "ProductController Edit[Post] Action");
 
-                // return the error view with message
+                // Return the error view with message
                 ViewBag.errorMessage = "Something went wrong please try again..";
                 return View("Error");
             }
@@ -232,31 +240,35 @@ namespace Shopzop.Controllers
         {
             try
             {
-                // check for active User Session
+                // Check for active User Session
                 if (Session["UserID"] != null)
                 {
                     // Inactivating product
-                    var Product = db.Products.Find(id);
-                    Product.Status = false;
+                    var product = db.Products.Find(id);
+                    product.Status = false;
                     db.SaveChanges();
-                    // updating log table in database
+                    // Updating log table in database
                     var log = db.ProductsLogs.OrderByDescending(obj => obj.LogId).ToList().FirstOrDefault();
                     log.UserId = Convert.ToInt32(Session["UserID"]);
                     db.SaveChanges();
                     TempData["InactivateMessage"] = "Success";
-                    // redirecting to products page
+
+                    // Log the Inactivated product information
+                    logger.Info("Product Inactivated by User Id :" + " " + Session["UserId"] + " , Product Id :" + " " + product.ProductId);
+
+                    // Redirecting to products page
                     return RedirectToAction("Index");
                 }
                 TempData["NotLogin"] = "Success";
-                // redirecting to login page
+                // Redirecting to login page
                 return RedirectToAction("Index", "Login");
             }
             catch (Exception ex)
             {
-                // log the error message in log file
+                // Log the error message in log file
                 logger.Error(ex, "ProductController Inactivate Action");
 
-                // return the error view with message
+                // Return the error view with message
                 ViewBag.errorMessage = "Something went wrong please try again..";
                 return View("Error");
             }
@@ -268,31 +280,35 @@ namespace Shopzop.Controllers
         {
             try
             {
-                // check for active User Session
+                // Check for active User Session
                 if (Session["UserID"] != null)
                 {
                     // Activating product
-                    var Product = db.Products.Find(id);
-                    Product.Status = true;
+                    var product = db.Products.Find(id);
+                    product.Status = true;
                     db.SaveChanges();
-                    // updating log table in database
+                    // Updating log table in database
                     var log = db.ProductsLogs.OrderByDescending(obj => obj.LogId).ToList().FirstOrDefault();
                     log.UserId = Convert.ToInt32(Session["UserID"]);
                     db.SaveChanges();
                     TempData["ActivateMessage"] = "Success";
-                    // redirecting to products page
+
+                    // Log the Activated product information
+                    logger.Info("Product Activated by User Id :" + " " + Session["UserId"] + " , Product Id :" + " " + product.ProductId);
+
+                    // Redirecting to products page
                     return RedirectToAction("Index");
                 }
                 TempData["NotLogin"] = "Success";
-                // redirecting to login page
+                // Redirecting to login page
                 return RedirectToAction("Index", "Login");
             }
             catch (Exception ex)
             {
-                // log the error message in log file
+                // Log the error message in log file
                 logger.Error(ex, "ProductController Activate Action");
 
-                // return the error view with message
+                // Return the error view with message
                 ViewBag.errorMessage = "Something went wrong please try again..";
                 return View("Error");
             }
@@ -304,38 +320,38 @@ namespace Shopzop.Controllers
         {
             try
             {
-                // check for active User Session
+                // Check for active User Session
                 if (Session["UserName"] == null)
                 {
                     TempData["NotLogin"] = "Success";
-                    // redirecting to login page
+                    // Redirecting to login page
                     return RedirectToAction("Index", "Login");
                 }
 
                 ViewBag.categoryTypes = GetCategoryTypesList();
                 ViewBag.Action = "Search";
 
-                // for empty search it will dispaly all products
+                // For empty search it will dispaly all products
                 if (CategoryName == null && (searchName == null || searchName.IsEmpty()))
                 {
                     return RedirectToAction("Index");
                 }
 
-                // displays searched products 
+                // Displays products searched by name 
                 else if (CategoryName == null)
                 {
                     var product = db.Products.Where(s => s.ProductName.Contains(searchName)).OrderByDescending(s => s.ProductId).ToList().ToPagedList(page ?? 1, 5);
                     return View("Index", product);
                 }
 
-                // displays category wise products
+                // Displays products category wise
                 else if (CategoryName == null || searchName.IsEmpty())
                 {
                     var product = db.Products.Where(s => s.CategoryId == CategoryName).OrderByDescending(s => s.ProductId).ToList().ToPagedList(page ?? 1, 5);
                     return View("Index", product);
                 }
 
-                // displays category wise and searched products
+                // Displays products category wise and searched by name 
                 else
                 {
                     var product = db.Products.Where(s => s.CategoryId == CategoryName).Where(s => s.ProductName.Contains(searchName)).OrderByDescending(s => s.ProductId).ToList().ToPagedList(page ?? 1, 5);
@@ -344,10 +360,10 @@ namespace Shopzop.Controllers
             }
             catch (Exception ex)
             {
-                // log the error message in log file
+                // Log the error message in log file
                 logger.Error(ex, "ProductController Search Action");
 
-                // return the error view with message
+                // Return the error view with message
                 ViewBag.errorMessage = "Something went wrong please try again..";
                 return View("Error");
             }

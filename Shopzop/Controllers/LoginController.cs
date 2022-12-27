@@ -12,11 +12,11 @@ using System.Web.Routing;
 using System.Web.UI;
 using Microsoft.Ajax.Utilities;
 using Microsoft.Extensions.Logging;
-using NLog;
 using PagedList;
 using Shopzop.Common;
 using Shopzop.Models;
 using WebGrease;
+using NLog;
 using LogManager = NLog.LogManager;
 
 namespace Shopzop.Controllers
@@ -32,19 +32,20 @@ namespace Shopzop.Controllers
         #region Index Method - Login
         public ActionResult Index()
         {
-            // clears the existing user session
+            // Clears the existing user session
             Session.Clear();
 
-            // to display success message after successful user registration 
+            // Success message for successful user registration 
             if (TempData["ReisterMessage"] != null)
             {
                 ViewBag.SuccessMessage = "Success";
             }
-            // to display error message if user is not logged in and trying to use functionality of apllication  
+            // Error message for invalid User Name or Password  
             else if (TempData["NotLogin"] != null)
             {
                 ViewBag.NotLogin = "Success";
             }
+            // Success message for Email sending for Forget Password 
             else if (TempData["EmailSent"] != null)
             {
                 ViewBag.EmailSent = "Success";
@@ -64,13 +65,16 @@ namespace Shopzop.Controllers
                 {
                     using (ShopzopEntities db = new ShopzopEntities())
                     {
-                        // authenticating user name and password
+                        // Authenticating user name and password
                         var obj = db.Users.ToList().Where(model => model.UserName.Equals(user.UserName) && decryptPassword.DecryptPassword(model.Password).Equals(user.Password)).FirstOrDefault();
                         if (obj != null && decryptPassword.DecryptPassword(obj.Password) == user.Password)
                         {
                             // Intiating User Session
                             Session["UserID"] = obj.UserId.ToString();
                             Session["UserName"] = obj.UserName.ToString();
+
+                            // log the login information
+                            logger.Info("User Logged in, UserId :" + " " + Session["UserId"]);
 
                             // Redirecting to Product Page
                             return RedirectToAction("Index", "Product");
@@ -85,10 +89,10 @@ namespace Shopzop.Controllers
             }
             catch (Exception ex)
             {
-                // log the error message in log file
+                // Log the error message
                 logger.Error(ex, "LoginController Index[Post] Action");
 
-                // return the error view with message
+                // Return the error view with message
                 ViewBag.errorMessage = "Something went wrong please try again..";
                 return View("Error");
             }
@@ -98,10 +102,13 @@ namespace Shopzop.Controllers
         #region Logout Method
         public ActionResult Logout()
         {
+            // Log the logout information
+            logger.Info("User Logged out, UserId :" + " " + Session["UserId"]);
+
             // Session will be terminated
             Session["UserId"] = null;
 
-            // redirecting to Login page
+            // Redirecting to Login page
             return RedirectToAction("Index");
         }
         #endregion
@@ -132,15 +139,19 @@ namespace Shopzop.Controllers
                     return View();
                 }
                 TempData["EmailSent"] = "Success";
+
+                // Log the Email sending information
+                logger.Info("Forget password email sent");
+
                 // Redirecting to Login Page
                 return RedirectToAction("Index", "Login");
             }
             catch (Exception ex)
             {
-                // log the error message in log file
+                // Log the Error message
                 logger.Error(ex, "LoginController ForgetPassword[Post] Action");
 
-                // return the error view with message
+                // Return the error view with message
                 ViewBag.errorMessage = "Something went wrong please try again..";
                 return View("Error");
             }
